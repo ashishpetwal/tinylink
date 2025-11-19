@@ -12,6 +12,7 @@ export default function LinkInput({}: LinkInputProps) {
     const [customCode, setCustomCode] = useState("");
     const [useCustomCode, setUseCustomCode] = useState(false);
     const [errors, setErrors] = useState<{ url?: string; customCode?: string }>({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const addLink = useLinksStore((state) => state.addLink);
 
@@ -49,26 +50,45 @@ export default function LinkInput({}: LinkInputProps) {
         const { urlError, customCodeError } = runValidation(url, customCode, useCustomCode);
 
         if (!urlError && !customCodeError) {
-            const formData = {
-                originalUrl: url,
-                shortcode: useCustomCode ? customCode : undefined,
-            }
+            setIsSubmitting(true);
+            try {
+                const formData = {
+                    originalUrl: url,
+                    shortcode: useCustomCode ? customCode : undefined,
+                }
 
-            const response = await createShortLink(formData);
-            if (response.error) {
-                console.log("Error creating short link:", response.error);
-                return;
+                const response = await createShortLink(formData);
+                addLink(response);
+                
+                // Reset form
+                setUrl("");
+                setCustomCode("");
+                setUseCustomCode(false);
+                setErrors({});
+            } catch (error: any) {
+                // Extract error message from server response
+                const errorMessage = error?.response?.data?.message || "Failed to create short link";
+                
+                // Handle specific error cases based on backend responses
+                if (errorMessage.includes("Shortcode already in use")) {
+                    setErrors(prev => ({ ...prev, customCode: "This custom code is already taken. Please choose another." }));
+                } else if (errorMessage.includes("originalUrl is required")) {
+                    setErrors(prev => ({ ...prev, url: "URL is required" }));
+                } else if (errorMessage.includes("exceeds maximum length")) {
+                    setErrors(prev => ({ ...prev, url: "URL is too long (maximum 2048 characters)" }));
+                } else if (errorMessage.includes("shortcode must be alphanumeric")) {
+                    setErrors(prev => ({ ...prev, customCode: "Custom code must be 6-8 alphanumeric characters" }));
+                } else {
+                    // Generic error - show in URL field
+                    setErrors(prev => ({ ...prev, url: errorMessage }));
+                }
+            } finally {
+                setIsSubmitting(false);
             }
-            addLink(response);
-            // Reset form
-            setUrl("");
-            setCustomCode("");
-            setUseCustomCode(false);
-            setErrors({});
         }
     };
 
-    const isSubmitDisabled = !!validateUrl(url) || (useCustomCode && !!validateCustomCode(customCode));
+    const isSubmitDisabled = isSubmitting || !!validateUrl(url) || (useCustomCode && !!validateCustomCode(customCode));
 
     return (
         <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
