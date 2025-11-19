@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import AppHealth from '../../components/mainComponents/AppHealth'
 import { HealthData } from '@/types/heath'
+import { getHealthStatus } from '@/services/health'
 
 export default function HealthPage() {
     const [healthData, setHealthData] = useState<HealthData | null>(null)
@@ -11,9 +12,8 @@ export default function HealthPage() {
     useEffect(() => {
         const fetchHealthData = async () => {
             try {
-                const response = await fetch('/api/health')
-                const data = await response.json()
-                setHealthData(data)
+                const response = await getHealthStatus();
+                setHealthData(response)
             } catch (error) {
                 console.error('Failed to fetch health data:', error)
             } finally {

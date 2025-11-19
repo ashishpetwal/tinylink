@@ -1,5 +1,5 @@
 import { HealthData } from '@/types/heath'
-import { getStatusColor } from '@/utils/utils'
+import { formatUptime, getStatusColor } from '@/utils/utils'
 import { Clock, Cpu, Database, HardDrive } from 'lucide-react'
 
 interface AppHealthProps {
@@ -30,7 +30,7 @@ export default function AppHealth({ healthData }: AppHealthProps) {
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-gray-600">Uptime</p>
                                 <p className="text-2xl font-semibold text-gray-900">
-                                    {healthData ? Math.floor((healthData.uptime || 0) / 3600) : 0}h
+                                    {formatUptime(healthData?.uptime || 0)}
                                 </p>
                             </div>
                         </div>
@@ -43,7 +43,7 @@ export default function AppHealth({ healthData }: AppHealthProps) {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-gray-600">CPU Usage</p>
-                                <p className="text-2xl font-semibold text-gray-900">{healthData?.cpu || 0}%</p>
+                                <p className="text-2xl font-semibold text-gray-900">{healthData?.cpu ? healthData.cpu.toFixed(2) : '0.00'}%</p>
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@ export default function AppHealth({ healthData }: AppHealthProps) {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-gray-600">Database</p>
-                                <p className={`text-sm font-semibold ${healthData?.database === 'connected' ? 'text-green-600' : 'text-red-600'}`}>
+                                <p className={`uppercase text-sm font-semibold ${healthData?.database === 'connected' ? 'text-green-600' : 'text-red-600'}`}>
                                     {healthData?.database || 'Unknown'}
                                 </p>
                             </div>
