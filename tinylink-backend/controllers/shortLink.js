@@ -1,4 +1,4 @@
-const prismaClient = require('../utils/prismaClient');
+const {prismaClient} = require('../utils/prismaClient');
 const { generateRandomShortCode } = require('../utils/helper');
 
 const getAllShortLinks = async (req, res) => {
@@ -77,6 +77,29 @@ const createShortLink = async (req, res) => {
     }
 }
 
+const redirectShortLink = async (req, res) => {
+    try {
+        const { code } = req.params;
+        const shortLink = await prismaClient.link.findUnique({
+            where: { shortcode: code }
+        });
+        if (!shortLink) {
+            return res.status(404).json({ message: 'Short link not found' });
+        }
+        // Increment click count
+        await prismaClient.link.update({
+            where: { shortcode: code },
+            data: {
+                totalClicks: { increment: 1 },
+                lastClicked: new Date()
+            }
+        });
+        res.redirect(302, shortLink.targetUrl);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 const deleteShortLink = async (req, res) => {
     try {
         const { code } = req.params;
@@ -103,5 +126,6 @@ module.exports = {
     getAllShortLinks,
     getShortLinkByCode,
     createShortLink,
+    redirectShortLink,
     deleteShortLink
 }
