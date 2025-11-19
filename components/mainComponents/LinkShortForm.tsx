@@ -1,7 +1,11 @@
 import LinkInput from "../subComponents/LinkInput";
+import { TableofLinks } from "../subComponents/TableofLinks";
 
 export default function LinkShortForm() {
     return (
-        <LinkInput />
+        <main>
+            <LinkInput />
+            <TableofLinks />
+        </main>
     )
 }

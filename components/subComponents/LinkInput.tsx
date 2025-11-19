@@ -54,7 +54,7 @@ export default function LinkInput({}: LinkInputProps) {
     const isSubmitDisabled = !!validateUrl(url) || (useCustomCode && !!validateCustomCode(customCode));
 
     return (
-        <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
             <div className="bg-[var(--card-bg)] rounded-2xl shadow-xl border border-[var(--card-border)] p-6 sm:p-8">
                 {/* Header */}
                 <div className="mb-8">
@@ -77,8 +77,8 @@ export default function LinkInput({}: LinkInputProps) {
                             }}
                             onBlur={() => runValidation(url, customCode, useCustomCode)}
                             error={errors.url}
-                        />
-                        <SubmitButton disabled={isSubmitDisabled} />
+                            disabled={isSubmitDisabled}
+                        />  
                     </div>
 
                     {/* Divider */}
