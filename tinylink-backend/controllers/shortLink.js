@@ -1,5 +1,5 @@
-import { generateRandomShortCode } from "../utils/helper";
-import prismaClient from "../utils/prismaClient"
+const prismaClient = require('../utils/prismaClient');
+const { generateRandomShortCode } = require('../utils/helper');
 
 const getAllShortLinks = async (req, res) => {
     try {
