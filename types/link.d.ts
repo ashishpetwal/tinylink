@@ -1,6 +1,6 @@
 export interface Link {
     id: string;
-    shortCode: string;
+    shortcode: string;
     targetUrl: string;
     totalClicks: number;
     lastClicked: Date | null;

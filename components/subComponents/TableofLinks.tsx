@@ -1,32 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from '@/types/link';
 import DesktopTable from '../tables/DesktopTable';
 import SearchBar from './SearchBar';
 import EmptyState from './EmptyState';
 import MobileCardList from '../tables/MobileCardList';
 import ConfirmDialog from '../dialog/ConfirmDialog';
+import { getAllShortLinks } from '@/services/shortLink';
+import { useLinksStore } from '@/store/useLinksStore';
 
 // Main Component
 export function TableofLinks() {
-    const [links, setLinks] = useState<Link[]>([
-        {
-            id: '1',
-            shortCode: 'abc123',
-            targetUrl: 'https://example.com',
-            totalClicks: 42,
-            lastClicked: new Date('2024-01-15T10:30:00Z')
-        }
-    ]);
+    const { links, setLinks } = useLinksStore();
     const [searchTerm, setSearchTerm] = useState('');
     const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; linkId: string | null }>({
         isOpen: false,
         linkId: null
     });
 
-    const filteredLinks = links.filter(link =>
-        link.shortCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const filteredLinks = links?.filter(link =>
+        link.shortcode.toLowerCase().includes(searchTerm.toLowerCase()) ||
         link.targetUrl.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -45,6 +39,24 @@ export function TableofLinks() {
         setDeleteConfirm({ isOpen: false, linkId: null });
     };
 
+    useEffect(() => {
+
+        const fetchLinks = async () => {
+            try {
+                const response = await getAllShortLinks();
+                if (response.error) {
+                    console.error('Error fetching links:', response.error);
+                    return;
+                }
+                setLinks(response);
+            } catch (error) {
+                console.error('Error fetching links:', error);
+            }
+        };
+
+        fetchLinks();
+    }, []);
+
     return (
         <div className="w-full max-w-7xl mx-auto p-4 sm:p-6">
             {/* Header with search */}
@@ -60,7 +72,7 @@ export function TableofLinks() {
             />
 
             {/* Desktop and Mobile Views */}
-            {filteredLinks.length > 0 ? (
+            {filteredLinks?.length > 0 ? (
                 <>
                     <DesktopTable links={filteredLinks} onDelete={handleDeleteClick} />
                     <MobileCardList links={filteredLinks} onDelete={handleDeleteClick} />

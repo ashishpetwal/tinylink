@@ -35,10 +35,10 @@ export default function DesktopTable({ links, onDelete }: { links: Link[]; onDel
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[var(--foreground)]">
                                     <div className="flex items-center gap-2">
                                         <code className="bg-[var(--input-bg)] px-2 py-1 rounded text-[var(--primary)]">
-                                            {link.shortCode}
+                                            {link.shortcode}
                                         </code>
                                         <button 
-                                            onClick={() => handleCopy(link.shortCode)}
+                                            onClick={() => handleCopy(link.shortcode)}
                                             className="text-[var(--muted-text)] hover:text-[var(--primary)] transition-colors"
                                             title="Copy short code"
                                         >

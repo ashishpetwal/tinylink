@@ -3,6 +3,7 @@ import { useState } from "react";
 import URLInput from "./URLInput";
 import CustomCodeInput from "./CustomCodeInput";
 import { createShortLink } from "@/services/shortLink";
+import { useLinksStore } from "@/store/useLinksStore";
 
 interface LinkInputProps {}
 
@@ -11,6 +12,8 @@ export default function LinkInput({}: LinkInputProps) {
     const [customCode, setCustomCode] = useState("");
     const [useCustomCode, setUseCustomCode] = useState(false);
     const [errors, setErrors] = useState<{ url?: string; customCode?: string }>({});
+
+    const addLink = useLinksStore((state) => state.addLink);
 
     const validateUrl = (url: string): string | undefined => {
         if (!url.trim()) return "URL is required";
@@ -56,7 +59,7 @@ export default function LinkInput({}: LinkInputProps) {
                 console.log("Error creating short link:", response.error);
                 return;
             }
-            console.log("Short link created successfully:", response.shortcode);
+            addLink(response);
             // Reset form
             setUrl("");
             setCustomCode("");
