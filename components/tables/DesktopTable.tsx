@@ -1,9 +1,10 @@
 import { Link } from "@/types/link";
+import { formatDate } from "@/utils/utils";
 import { Copy, ExternalLink, Trash2 } from "lucide-react";
 
 export default function DesktopTable({ links, onDelete }: { links: Link[]; onDelete: (id: string) => void }) {
     const handleCopy = (text: string) => {
-        navigator.clipboard.writeText(text);
+        navigator.clipboard.writeText(process.env.NEXT_PUBLIC_CLIENT_URL + "/" + text);
     };
 
     return (
@@ -63,7 +64,7 @@ export default function DesktopTable({ links, onDelete }: { links: Link[]; onDel
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--muted-text)]">
-                                    {link.lastClicked ? link.lastClicked.toLocaleDateString() : 'Never'}
+                                    {formatDate(link.lastClicked)}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <button

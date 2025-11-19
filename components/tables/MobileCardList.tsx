@@ -1,4 +1,5 @@
 import { Link } from "@/types/link";
+import { formatDate } from "@/utils/utils";
 import { Copy, ExternalLink, Trash2 } from "lucide-react";
 
 export default function MobileCardList({ links, onDelete }: { links: Link[]; onDelete: (id: string) => void }) {
@@ -53,7 +54,7 @@ export default function MobileCardList({ links, onDelete }: { links: Link[]; onD
                         <div className="flex items-center gap-1">
                             <span className="text-[var(--muted-text)]">Last:</span>
                             <span className="font-medium text-[var(--foreground)]">
-                                {link.lastClicked ? link.lastClicked.toLocaleDateString() : 'Never'}
+                                {formatDate(link.lastClicked)}
                             </span>
                         </div>
                     </div>

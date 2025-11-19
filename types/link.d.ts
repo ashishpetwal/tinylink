@@ -3,5 +3,5 @@ export interface Link {
     shortcode: string;
     targetUrl: string;
     totalClicks: number;
-    lastClicked: Date | null;
+    lastClicked: string | null;
 }
