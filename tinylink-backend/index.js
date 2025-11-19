@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 8000;
 const cors = require('cors');
 
 const shortLinkRoutes = require('./routes/shortLink');
+const healthzRoutes = require('./routes/healthz');
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -30,6 +31,8 @@ const server = app.listen(PORT, () => {
 });
 
 app.use('/api/links', shortLinkRoutes);
+
+app.use('/api/healthz', healthzRoutes);
 
 process.on('SIGTERM', () => {
     console.log('SIGTERM received, shutting down gracefully');
