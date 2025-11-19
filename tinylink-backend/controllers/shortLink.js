@@ -44,19 +44,29 @@ const createShortLink = async (req, res) => {
             return res.status(400).json({ message: 'shortcode must be alphanumeric and between 6 and 8 characters long' });
         }
 
+        let finalShortCode = shortcode || generateRandomShortCode();
+
         if (shortcode) {
             const existingLink = await prismaClient.link.findUnique({
                 where: { shortcode: shortcode }
             });
             if (existingLink) {
-                return res.status(409).json({ message: 'shortcode already in use' });
+                return res.status(409).json({ message: 'Shortcode already in use' });
             }
+        }
+
+        while (true && !shortcode) {
+            const existingLink = await prismaClient.link.findUnique({
+                where: { shortcode: finalShortCode }
+            });
+            if (!existingLink) break;
+            finalShortCode = generateRandomShortCode();
         }
 
         const newLink = await prismaClient.link.create({
             data: {
                 targetUrl: originalUrl,
-                shortcode: shortcode || generateRandomShortCode()
+                shortcode: finalShortCode
             }
         });
 
@@ -72,15 +82,15 @@ const deleteShortLink = async (req, res) => {
         const { code } = req.params;
 
         const existingLink = await prismaClient.link.findUnique({
-            where: { shortcode: code }
+            where: { id: code }
         });
 
         if (!existingLink) {
             return res.status(404).json({ message: 'Short link not found' });
         }
-        
+
         await prismaClient.link.delete({
-            where: { shortcode: code }
+            where: { id: code }
         });
 
         res.status(200).json({ message: 'Short link deleted successfully' });
