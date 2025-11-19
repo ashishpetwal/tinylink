@@ -4,7 +4,7 @@ import { Copy, ExternalLink, Trash2 } from "lucide-react";
 
 export default function MobileCardList({ links, onDelete }: { links: Link[]; onDelete: (id: string) => void }) {
     const handleCopy = (text: string) => {
-        navigator.clipboard.writeText(text);
+        navigator.clipboard.writeText(process.env.NEXT_PUBLIC_CLIENT_URL + "/" + text);
     };
 
     return (
