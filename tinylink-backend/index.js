@@ -8,11 +8,13 @@ const cors = require('cors');
 const shortLinkRoutes = require('./routes/shortLink');
 const healthzRoutes = require('./routes/healthz');
 
+const allowedOrigin = process.env.NODE_ENV === 'production' ? process.env.ALLOWED_ORIGIN : 'http://localhost:3000';
+
 app.use(cors({
     origin: function (origin, callback) {
+
         const allowedOrigins = [
-            'http://localhost:3000',
-            'https://yourdomain.com'
+            allowedOrigin,
         ];
         
         if (!origin || allowedOrigins.includes(origin)) {
