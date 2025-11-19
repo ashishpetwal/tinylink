@@ -43,7 +43,7 @@ export default function AppHealth({ healthData }: AppHealthProps) {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-gray-600">CPU Usage</p>
-                                <p className="text-2xl font-semibold text-gray-900">{healthData?.cpu ? healthData.cpu.toFixed(2) : '0.00'}%</p>
+                                <p className="text-2xl font-semibold text-gray-900">{healthData?.cpu ? (healthData.cpu * 100).toFixed(2) : '0.00'}%</p>
                             </div>
                         </div>
                     </div>
