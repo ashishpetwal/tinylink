@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#tinylink-backend
+/tinylink-backend/node_modules
+/tinylink-backend/.env
+/tinylink-backend/generated/prisma
