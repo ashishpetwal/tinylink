@@ -94,7 +94,7 @@ const redirectShortLink = async (req, res) => {
                 lastClicked: new Date()
             }
         });
-        res.redirect(302, shortLink.targetUrl);
+        return res.status(200).json({ targetUrl: shortLink.targetUrl });
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
     }

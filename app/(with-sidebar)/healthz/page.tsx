@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import AppHealth from '../../components/mainComponents/AppHealth'
+import AppHealth from '../../../components/mainComponents/AppHealth'
 import { HealthData } from '@/types/heath'
 import { getHealthStatus } from '@/services/health'
 

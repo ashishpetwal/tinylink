@@ -1,4 +1,4 @@
-import LinkShortForm from "../components/mainComponents/LinkShortForm";
+import LinkShortForm from "@/components/mainComponents/LinkShortForm";
 
 export default function Home() {
   return (

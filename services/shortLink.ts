@@ -20,6 +20,16 @@ export const createShortLink = async (data: { originalUrl: string; shortcode?: s
     }
 }
 
+export const redirectShortLink = async (code: string) => {
+    try {
+        const response = await api.get(`/links/r/${code}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error redirecting short link:", error);
+        throw error;
+    }
+}
+
 export const getShortLinkStats = async (code: string) => {
     try {
         const response = await api.get(`/links/${code}`);
