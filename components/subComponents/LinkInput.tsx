@@ -2,7 +2,7 @@
 import { useState } from "react";
 import URLInput from "./URLInput";
 import CustomCodeInput from "./CustomCodeInput";
-import SubmitButton from "./SubmitButton";
+import { createShortLink } from "@/services/shortLink";
 
 interface LinkInputProps {}
 
@@ -41,13 +41,27 @@ export default function LinkInput({}: LinkInputProps) {
         return { urlError, customCodeError };
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const { urlError, customCodeError } = runValidation(url, customCode, useCustomCode);
 
         if (!urlError && !customCodeError) {
-            // onSubmit?.(url, useCustomCode ? customCode : undefined);
-            console.log("Submitting:", { url, customCode: useCustomCode ? customCode : undefined });
+            const formData = {
+                originalUrl: url,
+                shortcode: useCustomCode ? customCode : undefined,
+            }
+
+            const response = await createShortLink(formData);
+            if (response.error) {
+                console.log("Error creating short link:", response.error);
+                return;
+            }
+            console.log("Short link created successfully:", response.shortcode);
+            // Reset form
+            setUrl("");
+            setCustomCode("");
+            setUseCustomCode(false);
+            setErrors({});
         }
     };
 

@@ -17,7 +17,7 @@ const getShortLinkByCode = async (req, res) => {
     try {
         const { code } = req.params;
         const shortLink = await prismaClient.link.findUnique({
-            where: { shortCode: code }
+            where: { shortcode: code }
         });
         if (!shortLink) {
             return res.status(404).json({ message: 'Short link not found' });
@@ -30,38 +30,39 @@ const getShortLinkByCode = async (req, res) => {
 
 const createShortLink = async (req, res) => {
     try {
-        const { longUrl, shortCode } = req.body;
+        const { originalUrl, shortcode } = req.body;
 
-        if (!longUrl || !shortCode) {
-            return res.status(400).json({ message: 'Both longUrl and shortCode are required' });
+        if (!originalUrl) {
+            return res.status(400).json({ message: 'originalUrl is required' });
         }
 
-        if (longUrl.length > 2048) {
-            return res.status(400).json({ message: 'longUrl exceeds maximum length of 2048 characters' });
+        if (originalUrl.length > 2048) {
+            return res.status(400).json({ message: 'originalUrl exceeds maximum length of 2048 characters' });
         }
 
-        if (shortCode && !/^[A-Za-z0-9]{6,8}$/.test(shortCode)) {
-            return res.status(400).json({ message: 'shortCode must be alphanumeric and between 6 and 8 characters long' });
+        if (shortcode && !/^[A-Za-z0-9]{6,8}$/.test(shortcode)) {
+            return res.status(400).json({ message: 'shortcode must be alphanumeric and between 6 and 8 characters long' });
         }
 
-        if (shortCode) {
+        if (shortcode) {
             const existingLink = await prismaClient.link.findUnique({
-                where: { shortCode }
+                where: { shortcode: shortcode }
             });
             if (existingLink) {
-                return res.status(409).json({ message: 'shortCode already in use' });
+                return res.status(409).json({ message: 'shortcode already in use' });
             }
         }
 
         const newLink = await prismaClient.link.create({
             data: {
-                longUrl,
-                shortCode: shortCode || generateRandomShortCode()
+                targetUrl: originalUrl,
+                shortcode: shortcode || generateRandomShortCode()
             }
         });
 
         res.status(201).json(newLink);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -71,7 +72,7 @@ const deleteShortLink = async (req, res) => {
         const { code } = req.params;
 
         const existingLink = await prismaClient.link.findUnique({
-            where: { shortCode: code }
+            where: { shortcode: code }
         });
 
         if (!existingLink) {
@@ -79,7 +80,7 @@ const deleteShortLink = async (req, res) => {
         }
         
         await prismaClient.link.delete({
-            where: { shortCode: code }
+            where: { shortcode: code }
         });
 
         res.status(200).json({ message: 'Short link deleted successfully' });

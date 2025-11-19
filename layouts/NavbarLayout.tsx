@@ -16,7 +16,7 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
                         <Link href="/" className="block py-2 px-4 rounded hover:bg-gray-700">Dashboard</Link>
                     </li>
                     <li className="mb-2">
-                        <Link href="/health" className="block py-2 px-4 rounded hover:bg-gray-700">Health</Link>
+                        <Link href="/healthz" className="block py-2 px-4 rounded hover:bg-gray-700">Health</Link>
                     </li>
                 </ul>
             </nav>
@@ -45,7 +45,7 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
                                     <Link href="/" className="block py-2 px-4 rounded hover:bg-gray-700">Dashboard</Link>
                                 </li>
                                 <li className="mb-2">
-                                    <Link href="/health" className="block py-2 px-4 rounded hover:bg-gray-700">Health</Link>
+                                    <Link href="/healthz" className="block py-2 px-4 rounded hover:bg-gray-700">Health</Link>
                                 </li>
                             </ul>
                         </nav>
