@@ -17,10 +17,10 @@ export default function MobileCardList({ links, onDelete }: { links: Link[]; onD
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-2">
                                 <code className="bg-[var(--input-bg)] px-2 py-1 rounded text-[var(--primary)] font-medium text-sm">
-                                    {link.shortCode}
+                                    {link.shortcode}
                                 </code>
                                 <button 
-                                    onClick={() => handleCopy(link.shortCode)}
+                                    onClick={() => handleCopy(link.shortcode)}
                                     className="text-[var(--muted-text)] hover:text-[var(--primary)] transition-colors"
                                     title="Copy short code"
                                 >

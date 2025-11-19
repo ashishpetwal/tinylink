@@ -7,12 +7,12 @@ import SearchBar from './SearchBar';
 import EmptyState from './EmptyState';
 import MobileCardList from '../tables/MobileCardList';
 import ConfirmDialog from '../dialog/ConfirmDialog';
-import { getAllShortLinks } from '@/services/shortLink';
+import { deleteShortLink, getAllShortLinks } from '@/services/shortLink';
 import { useLinksStore } from '@/store/useLinksStore';
 
 // Main Component
 export function TableofLinks() {
-    const { links, setLinks } = useLinksStore();
+    const { links, setLinks, deleteLink } = useLinksStore();
     const [searchTerm, setSearchTerm] = useState('');
     const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; linkId: string | null }>({
         isOpen: false,
@@ -28,9 +28,15 @@ export function TableofLinks() {
         setDeleteConfirm({ isOpen: true, linkId: id });
     };
 
-    const handleConfirmDelete = () => {
+    const handleConfirmDelete = async () => {
         if (deleteConfirm.linkId) {
-            setLinks(links.filter(link => link.id !== deleteConfirm.linkId));
+            const response = await deleteShortLink(deleteConfirm.linkId);
+            if (response.error) {
+                console.error('Error deleting link:', response.error);
+                setDeleteConfirm({ isOpen: false, linkId: null });
+                return;
+            }
+            deleteLink(deleteConfirm.linkId);
         }
         setDeleteConfirm({ isOpen: false, linkId: null });
     };
