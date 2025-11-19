@@ -5,6 +5,8 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const cors = require('cors');
 
+const shortLinkRoutes = require('./routes/shortLink');
+
 app.use(cors({
     origin: function (origin, callback) {
         const allowedOrigins = [
@@ -26,6 +28,8 @@ app.use(express.json());
 const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+app.use('/api/links', shortLinkRoutes);
 
 process.on('SIGTERM', () => {
     console.log('SIGTERM received, shutting down gracefully');
